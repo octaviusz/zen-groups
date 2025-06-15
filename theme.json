@@ -6,7 +6,7 @@
   "readme": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/README.md",
   "image": "",
   "style": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/userChrome.css",
-  "js": true,
+  "js": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/groups.uc.js",
   "preferences": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/preferences.json",
   "author": "octaviusz",
   "version": "0.0.1",
