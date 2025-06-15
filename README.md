@@ -1,3 +1,3 @@
 # Zen Groups
 
-here some text about zen groups.
+heres some cool text about zen groups.
