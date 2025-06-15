@@ -172,7 +172,7 @@ class ZenGroups {
     const labelEditing = (saveChanges) => {
       if (saveChanges) {
         const newValue = input.value.trim();
-        if (newValue) {
+        if (newValue.length > 0 && newValue !== originalText) {
           this.#activeGroup.label = newValue;
         } else {
           label.textContent = originalText;
