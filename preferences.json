@@ -1,0 +1,8 @@
+[
+    {
+    "property": "mod.zen-groups.css",
+    "label": "I am an advanced CSS user and want to style Groups myself",
+    "type": "checkbox",
+    "defaultValue": false
+  }
+]
