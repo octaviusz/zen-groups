@@ -1,0 +1,22 @@
+{
+  "id": "zen-groups",
+  "name": "Zen Groups",
+  "description": "Groups like Arc Folders (almost)",
+  "homepage": "https://github.com/octaviusz/zen-groups",
+  "readme": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/README.md",
+  "image": "",
+  "style": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/userChrome.css",
+  "js": true,
+  "preferences": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/preferences.json",
+  "author": "octaviusz",
+  "version": "0.0.1",
+  "tags": [
+    "sine",
+    "fx-autoconfig",
+    "Groups",
+    "Zen Groups"
+  ],
+  "createdAt": "2025-06-15",
+  "updatedAt": "2025-06-15",
+  "fork": ["zen"]
+}
