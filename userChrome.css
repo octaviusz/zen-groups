@@ -1,4 +1,9 @@
 @media not (-moz-pref("mod.zen-groups.css")) {
+	* {
+		--zen-workspace-color-bg: light-dark(color-mix(in srgb, var(--zen-primary-color) 50%, white 50%),color-mix(in srgb, var(--zen-primary-color) 50%, black 50%)) !important;
+		--zen-workspace-color-fg: light-dark(color-mix(in srgb, var(--zen-primary-color) 20%, white 80%), color-mix(in srgb, var(--zen-primary-color) 80%, black 20%)) !important;
+		--zen-workspace-color-stroke: light-dark(color-mix(in srgb, var(--zen-primary-color) 40%, black 60%), color-mix(in srgb, var(--zen-primary-color) 40%, white 60%)) !important;
+	}
 	#tabbrowser-tabs[movingtab] tab-group:not([split-view-group]) {
 		overflow: visible;
 
