@@ -53,6 +53,8 @@
 		}
 
 		.tab-group-icon {
+			width: 35px;
+			height: 35px;
 			transition: margin .3s ease;
 			flex-shrink: 0;
 		}

@@ -14,7 +14,7 @@ class ZenGroups {
   `);
   folderSVG = new DOMParser().parseFromString(
     `
-    <svg width="40px" height="40px" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="-67.409 -14.145 29.279 28.92">
+    <svg width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="-67.409 -14.145 29.279 28.92">
       <defs>
         <linearGradient gradientUnits="userSpaceOnUse" x1="-53.05" y1="-3.8" x2="-53.05" y2="8.998" id="gradient-1">
           <stop offset="0" style="stop-color: rgb(255, 255, 255);"/>
