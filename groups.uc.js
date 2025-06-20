@@ -324,7 +324,7 @@ class ZenGroups {
   #onTabResetButtonClick(event) {
     if (!event.target.classList.contains("tab-reset-button")) return;
     const tab = event.target.closest(".tab-stack").parentElement;
-    if (!tab?.pinned) return;
+    if (tab?.pinned) return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
