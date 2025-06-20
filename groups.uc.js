@@ -323,13 +323,14 @@ class ZenGroups {
 
   #onTabResetButtonClick(event) {
     if (!event.target.classList.contains("tab-reset-button")) return;
+    const tab = event.target.closest(".tab-stack").parentElement;
+    if (!tab?.pinned) return;
 
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    const tab = event.target.closest(".tab-stack").parentElement;
     const group = tab.group;
-    if (!tab || !group) return;
+    if (!group) return;
 
     gBrowser.explicitUnloadTabs([tab]);
   }
