@@ -60,11 +60,11 @@
 		}
 
 
-		&[has-focus] .tab-group-icon {
-			margin: -3px 0px 0px 0px;
+		&[has-active] .tab-group-icon {
+			margin: 0px 0px 0px 0px;
 		}
 
-		&:not([has-focus]) .tab-group-icon {
+		&:not([has-active]) .tab-group-icon {
 			margin: 0px 4px 0px 4px;
 		}
 
@@ -139,7 +139,7 @@
 			background: none !important;
 
 			& .tab-group-icon {
-				margin: -3px 0px 0px 0px;
+				margin: 0px 0px 0px 0px;
 			}
 		}
 

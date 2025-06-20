@@ -1,7 +1,6 @@
 class ZenGroups {
   #initialized = false;
   #animationState = null;
-  #mouseTimer = null;
   #activeGroup = null;
   #iconsPrefName = "mod.zen-groups.icon.emoji";
   menuPopup = window.MozXULElement.parseXULToFragment(`
@@ -48,6 +47,7 @@ class ZenGroups {
         <animateTransform begin="0s" type="translate" additive="sum" attributeName="transform" values="0 0;-1 0" dur="0.3s" fill="freeze" keyTimes="0; 1" calcMode="spline" keySplines="0.42 0 0.58 1"/>
         <animateTransform begin="0s" type="scale" additive="sum" attributeName="transform" values="1 1;0.9 0.9" dur="0.3s" fill="freeze" keyTimes="0; 1" calcMode="spline" keySplines="0.42 0 0.58 1"/>
         </text>
+    <!--End Emoji (text)-->
       <rect x="-61.3" y="-3.8" width="16.5" height="12.798" style="stroke-width: 1.25; fill-opacity: 0.15; transform-origin: -53.05px 2.599px; fill: url(&quot;#gradient-1&quot;);" id="rect-1" rx="2.25">
         <animateTransform begin="0s" type="skewX" additive="sum" attributeName="transform" values="0;-17" dur="0.3s" fill="freeze" keyTimes="0; 1" calcMode="spline" keySplines="0.42 0 0.58 1"/>
         <animateTransform begin="0s" type="translate" additive="sum" attributeName="transform" values="0 0;3 -0.5" dur="0.3s" fill="freeze" keyTimes="0; 1" calcMode="spline" keySplines="0.42 0 0.58 1"/>
@@ -57,6 +57,34 @@ class ZenGroups {
     `,
     "image/svg+xml",
   ).documentElement;
+  constructor() {
+    this.#patchUnload();
+  }
+
+  #patchUnload() {
+    const origUnload = gBrowser.explicitUnloadTabs.bind(gBrowser);
+
+    gBrowser.explicitUnloadTabs = (tabs) => {
+      origUnload(tabs);
+
+      for (const tab of tabs) {
+        const group = tab.group;
+
+        if (!group) continue;
+
+        this._hideTab(tab);
+
+        this._watchTabState(tab, () => {
+          if (!this._hasActiveTabs(group) && group.hasAttribute("has-active")) {
+            group.removeAttribute("has-active");
+            group.removeAttribute("was-collapsed");
+            group.collapsed = true;
+          }
+        });
+      }
+    };
+  }
+
   init() {
     if (this.#initialized) return;
     this.#initialized = true;
@@ -87,11 +115,25 @@ class ZenGroups {
       "TabGroupCollapse",
       this.#onTabGroupCollapse.bind(this),
     );
-
     gBrowser.tabContainer.addEventListener(
-      "TabSelect",
-      this.#handleGlobalTabSelect.bind(this),
+      "click",
+      this.#onTabResetButtonClick.bind(this),
+      true,
     );
+  }
+
+  _watchTabState(tab, callback, attributeList = ["pending"]) {
+    if (!tab || !callback) return;
+
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      callback(tab);
+    });
+
+    observer.observe(tab, {
+      attributes: true,
+      attributeFilter: attributeList,
+    });
   }
 
   _groups() {
@@ -121,26 +163,25 @@ class ZenGroups {
     );
   }
   _updateTabVisibility(group) {
-    const isHoverOpened = group.hasAttribute("has-focus");
-    // const hasSelection = this._hasActiveTabs(group);
+    const hasActive = group.hasAttribute("has-active");
 
     this._resetTabsStyle(group);
 
     for (const tab of group.tabs) {
-      let shouldBeHidden = false;
-      tab.style.setProperty("display", "flex ", "important");
+      const resetButton = tab.querySelector(".tab-reset-button");
+      if (resetButton) {
+        resetButton.style.removeProperty("display");
+      }
 
-      if (isHoverOpened) {
-        // if (hasSelection) {
-        //   shouldBeHidden = !tab.selected;
-        // } else {
-        //   shouldBeHidden = tab.hasAttribute("pending");
-        // }
+      let shouldBeHidden = false;
+      if (hasActive) {
         shouldBeHidden = tab.hasAttribute("pending");
       }
 
       if (shouldBeHidden) {
         this._hideTab(tab);
+      } else if (hasActive && resetButton) {
+        resetButton.style.display = "block";
       }
     }
   }
@@ -149,7 +190,6 @@ class ZenGroups {
     const wasCollapsed = group.hasAttribute("was-collapsed");
 
     group.removeAttribute("was-collapsed");
-    group.removeAttribute("has-focus");
 
     if (wasCollapsed) {
       group.collapsed = true;
@@ -212,14 +252,9 @@ class ZenGroups {
     this.#createGroupButton(group);
 
     const groupHandlers = {
-      handleMouseEnter: this.#handleMouseEnter.bind(this),
-      handleMouseLeave: this.#handleMouseLeave.bind(this),
       handleClick: this.#handleClick.bind(this),
     };
     this.handlers.set(group, groupHandlers);
-
-    group.addEventListener("mouseenter", groupHandlers.handleMouseEnter);
-    group.addEventListener("mouseleave", groupHandlers.handleMouseLeave);
 
     const labelContainer = group.querySelector(".tab-group-label-container");
     labelContainer.addEventListener("click", groupHandlers.handleClick);
@@ -261,30 +296,6 @@ class ZenGroups {
     this.#animationState = null;
   }
 
-  #handleMouseEnter(event) {
-    const group = event.target;
-
-    if (group.collapsed && this._hasActiveTabs(group)) {
-      this.#mouseTimer = setTimeout(() => {
-        group.setAttribute("has-focus", "");
-        group.setAttribute("was-collapsed", "");
-        this._updateTabVisibility(group);
-        group.collapsed = false;
-      }, 300);
-    }
-  }
-
-  #handleMouseLeave(event) {
-    const group = event.target;
-
-    clearTimeout(this.#mouseTimer);
-    if (this._hasSelectedTabs(group)) {
-      this._updateTabVisibility(group);
-    } else {
-      this._resetGroupState(group);
-    }
-  }
-
   #handleClick(event) {
     if (event.button !== 0) return;
     const group = event.currentTarget.parentElement;
@@ -292,12 +303,12 @@ class ZenGroups {
     event.preventDefault();
 
     if (this._hasActiveTabs(group)) {
-      group.toggleAttribute("has-focus");
       group.toggleAttribute("was-collapsed");
+      group.toggleAttribute("has-active");
       this._updateTabVisibility(group);
       if (
         !group.hasAttribute("was-collapsed") &&
-        !group.hasAttribute("has-focus")
+        !group.hasAttribute("has-active")
       ) {
         this.#animationState = "open";
       } else {
@@ -310,14 +321,17 @@ class ZenGroups {
     this._resetGroupState(group);
   }
 
-  #handleGlobalTabSelect(event) {
-    const selectedTab = event.target;
+  #onTabResetButtonClick(event) {
+    if (!event.target.classList.contains("tab-reset-button")) return;
 
-    for (const group of this._groups()) {
-      if (!group.tabs.includes(selectedTab)) {
-        this._resetGroupState(group);
-      }
-    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const tab = event.target.closest(".tab-stack").parentElement;
+    const group = tab.group;
+    if (!tab || !group) return;
+
+    gBrowser.explicitUnloadTabs([tab]);
   }
 
   #createFolderIcon(group) {
