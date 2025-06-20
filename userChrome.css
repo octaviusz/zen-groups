@@ -1,9 +1,10 @@
 @media not (-moz-pref("mod.zen-groups.css")) {
 	* {
-		--zen-workspace-color-bg: light-dark(color-mix(in srgb, var(--zen-primary-color) 50%, white 50%),color-mix(in srgb, var(--zen-primary-color) 50%, black 50%)) !important;
+		--zen-workspace-color-bg: light-dark(color-mix(in srgb, var(--zen-primary-color) 50%, white 50%), color-mix(in srgb, var(--zen-primary-color) 50%, black 50%)) !important;
 		--zen-workspace-color-fg: light-dark(color-mix(in srgb, var(--zen-primary-color) 20%, white 80%), color-mix(in srgb, var(--zen-primary-color) 80%, black 20%)) !important;
 		--zen-workspace-color-stroke: light-dark(color-mix(in srgb, var(--zen-primary-color) 40%, black 60%), color-mix(in srgb, var(--zen-primary-color) 40%, white 60%)) !important;
 	}
+
 	#tabbrowser-tabs[movingtab] tab-group:not([split-view-group]) {
 		overflow: visible;
 
@@ -43,10 +44,13 @@
 	tab-group:not([split-view-group]) {
 		display: flex !important;
 		flex-direction: column !important;
-		margin: 0 !important;
+		margin: 2px 2px 0px 2px !important;
 		border-radius: calc(var(--zen-border-radius) + 2px) !important;
-		overflow: scroll;
 
+		&:not([collapsed]) .tab-group-label-container {
+			background: var(--tab-selected-bgcolor) !important;
+			box-shadow: var(--tab-selected-shadow);
+		}
 
 		.tab-group-icon {
 			width: 35px;
@@ -56,21 +60,19 @@
 		}
 
 
-		&[has-active] .tab-group-icon,
-		&[collapsed] .tab-group-icon {
-			margin: 0px 0px 0px 2px;
+		&[has-active] .tab-group-icon {
+			margin: 0px 0px 0px 0px;
 		}
-		
 
 		&:not([has-active]) .tab-group-icon {
-			margin: 0px 0px 0px 2px;
+			margin: 0px 4px 0px 4px;
 		}
 
-		&:hover .tab-group-button {
+		&:hover .tab-group-action-button {
 			list-style-image: url('chrome://browser/skin/zen-icons/menu.svg');
 		}
 
-		& .tab-group-button {
+		& .tab-group-action-button {
 			--toolbarbutton-inner-padding: 4px;
 			margin-left: auto !important;
 			flex-shrink: 0;
@@ -78,6 +80,21 @@
 			&:hover,
 			&[open] {
 				list-style-image: url('chrome://browser/skin/zen-icons/menu.svg');
+			}
+		}
+
+		&:hover .tab-group-tabs-button {
+			list-style-image: url('chrome://browser/skin/zen-icons/search-glass.svg');
+		}
+
+		& .tab-group-tabs-button {
+			--toolbarbutton-inner-padding: 4px;
+			margin-left: auto !important;
+			flex-shrink: 0;
+
+			&:hover,
+			&[open] {
+				list-style-image: url('chrome://browser/skin/zen-icons/search-glass.svg');
 			}
 		}
 
@@ -98,7 +115,6 @@
 
 			&>label {
 				background: transparent !important;
-				padding: 1px !important;
 				color: var(--sidebar-text-color) !important;
 				flex-grow: 1 !important;
 				flex-shrink: 1 !important;
@@ -107,11 +123,6 @@
 				overflow: hidden !important;
 				text-overflow: ellipsis !important;
 			}
-		}
-		
-		&[has-active] .tab-group-label-container,
-		&[collapsed] .tab-group-label-container {
-			margin-bottom: 2px !important;
 		}
 
 		& tab:not([zen-glance-tab]) {
@@ -145,6 +156,111 @@
 		tab-group:has(tab[hidden]) {
 			display: none !important;
 		}
+	}
+
+
+	/* Popup for Zen Groups Tabs List */
+	#zen-group-tabs-popup {
+		--arrowpanel-padding: 0;
+		background-color: var(--toolbar-bgcolor);
+		border-radius: var(--arrowpanel-border-radius);
+		--arrowpanel-border-color: var(--chrome-content-separator-color);
+		width: 250px;
+	}
+
+	#zen-group-tabs-popup #zen-group-tabs-search {
+		background-color: var(--toolbox-field-background-color) !important;
+		border: 1px solid var(--toolbox-field-border-color) !important;
+		border-radius: var(--toolbox-field-border-radius, 4px) !important;
+		color: var(--toolbox-field-color) !important;
+		margin: 0 !important;
+		padding: 5px 8px !important;
+		font-size: 1em;
+	}
+
+	#zen-group-tabs-popup #zen-group-tabs-search:focus-within {
+		border-color: gray !important;
+	}
+
+	#zen-group-tabs-popup .tabs-list-scrollbox {
+		padding: 4px;
+		overflow: scroll;
+		max-height: 450px;
+	}
+
+	.tabs-list-item {
+		position: relative;
+		height: 46px;
+		margin: 2px;
+		border-radius: var(--border-radius-medium);
+		margin-inline: var(--tab-block-margin);
+		cursor: default;
+	}
+
+	.tabs-list-item-background {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+	}
+
+	.tabs-list-item-content {
+		position: relative;
+		display: flex;
+		align-items: center;
+		direction: ltr;
+		mask-image: linear-gradient(to left, transparent, black var(--tab-label-mask-size));
+		height: 46px;
+		width: 218px;
+		margin-inline: var(--tab-block-margin);
+	}
+
+	.tabs-list-item:hover .tabs-list-item-background {
+		background-color: var(--tab-hover-background-color);
+		outline-color: var(--tab-hover-outline-color);
+	}
+
+	.tabs-list-item[selected="true"] .tabs-list-item-background {
+		background-color: rgba(255, 255, 255, 0.12);
+		box-shadow: var(--tab-selected-shadow);
+		outline-color: var(--tab-selected-outline-color);
+		border-color: transparent;
+	}
+
+	.tabs-list-item-icon {
+		width: 16px;
+		height: 16px;
+		margin-left: 6px;
+		margin-right: 6px;
+		flex-shrink: 0;
+	}
+
+
+	.tabs-list-item-labels {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		flex: 1;
+		min-width: 0;
+	}
+
+
+	.tabs-list-item-label,
+	.tab-list-item-secondary-label {
+		max-width: 200px;
+		margin-left: 4px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.tabs-list-item-label {
+		color: var(--lwt-text-color);
+	}
+
+	.tab-list-item-secondary-label {
+		color: var(--lwt-text-color);
+		opacity: 0.9;
+		font-size: 0.8em;
 	}
 
 }
