@@ -270,7 +270,8 @@ class ZenGroups {
   }
 
   #onTabGrouped(event) {
-    // TODO: WRITE ME PLZ
+    const group = event.target?.group;
+    this._updateTabVisibility(group);
   }
 
   #onTabGroupRemoved(event) {
