@@ -36,21 +36,17 @@
 		border: none !important;
 		background: transparent !important;
 		height: 36px !important;
-		padding: 0 0 8px 0 !important;
+		padding: 0 0 2px 0 !important;
 		box-sizing: border-box !important;
 	}
 
 	tab-group:not([split-view-group]) {
 		display: flex !important;
 		flex-direction: column !important;
-		margin: 2px 2px 0px 2px !important;
+		margin: 0 !important;
 		border-radius: calc(var(--zen-border-radius) + 2px) !important;
 		overflow: scroll;
 
-		&:not([collapsed]) .tab-group-label-container {
-			background: var(--tab-selected-bgcolor) !important;
-			box-shadow: var(--tab-selected-shadow);
-		}
 
 		.tab-group-icon {
 			width: 35px;
@@ -60,12 +56,14 @@
 		}
 
 
-		&[has-active] .tab-group-icon {
-			margin: 0px 0px 0px 0px;
+		&[has-active] .tab-group-icon,
+		&[collapsed] .tab-group-icon {
+			margin: 0px 0px 0px 2px;
 		}
+		
 
 		&:not([has-active]) .tab-group-icon {
-			margin: 0px 4px 0px 4px;
+			margin: 0px 0px 0px 2px;
 		}
 
 		&:hover .tab-group-button {
@@ -100,6 +98,7 @@
 
 			&>label {
 				background: transparent !important;
+				padding: 1px !important;
 				color: var(--sidebar-text-color) !important;
 				flex-grow: 1 !important;
 				flex-shrink: 1 !important;
@@ -108,6 +107,11 @@
 				overflow: hidden !important;
 				text-overflow: ellipsis !important;
 			}
+		}
+		
+		&[has-active] .tab-group-label-container,
+		&[collapsed] .tab-group-label-container {
+			margin-bottom: 2px !important;
 		}
 
 		& tab:not([zen-glance-tab]) {
@@ -134,13 +138,8 @@
 		}
 
 		&[collapsed] {
-			margin-bottom: 2px !important;
 			overflow: visible;
 			background: none !important;
-
-			& .tab-group-icon {
-				margin: 0px 0px 0px 0px;
-			}
 		}
 
 		tab-group:has(tab[hidden]) {

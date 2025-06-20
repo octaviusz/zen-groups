@@ -266,11 +266,31 @@ class ZenGroups {
 
   #onTabUngrouped(event) {
     const tab = event.target;
+    const group = event.detail;
+
     tab.style.removeProperty("display");
+    tab.querySelector(".tab-reset-button").style.removeProperty("display");
+
+    if (!this._hasActiveTabs(group) && group.hasAttribute("has-active")) {
+      group.removeAttribute("has-active");
+      group.removeAttribute("was-collapsed");
+      group.collapsed = true;
+    }
   }
 
   #onTabGrouped(event) {
-    const group = event.target?.group;
+    const tab = event.target;
+    const group = tab.group;
+    if (
+      tab.selected &&
+      group.collapsed &&
+      !group.hasAttribute("has-active")
+    ) {
+      group.toggleAttribute("has-active");
+      group.toggleAttribute("was-collapsed");
+      this.#animationState = "close";
+      group.collapsed = false;
+    }
     this._updateTabVisibility(group);
   }
 
