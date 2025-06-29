@@ -9,7 +9,7 @@
   "js": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/groups.uc.js",
   "preferences": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/preferences.json",
   "author": "octaviusz",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "tags": [
     "sine",
     "fx-autoconfig",
