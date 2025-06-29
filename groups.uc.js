@@ -77,8 +77,6 @@ class ZenGroups {
     "image/svg+xml",
   ).documentElement;
 
-  constructor() {}
-
   #patchTabGroup() {
     customElements.whenDefined("tab-group").then(() => {
       const ctor = customElements.get("tab-group");
@@ -133,7 +131,6 @@ class ZenGroups {
           };
 
           const hasActive = this.hasAttribute("has-active");
-          console.log("Tab group" + this.id + " current value: " + value);
 
           if (value) {
             // Collapse
@@ -142,9 +139,8 @@ class ZenGroups {
               //   self.#animateTabGroupIcon(this, "close"),
               //   self.#animateGroupCollapse(this),
               // ]);
-              await self.#animateGroupCollapse(this);
+              // await self.#animateGroupCollapse(this);
               await self.#animateTabGroupIcon(this, "close");
-              console.log("ANIMATION COLLAPSE PLAYED");
             }
 
             updateCollapsedState(value);
@@ -158,8 +154,7 @@ class ZenGroups {
               //   self.#animateGroupExpand(this),
               // ]);
               await self.#animateTabGroupIcon(this, "open");
-              await self.#animateGroupExpand(this);
-              console.log("ANIMATION EXPAND PLAYED");
+              // await self.#animateGroupExpand(this);
             }
           }
         },
@@ -175,12 +170,11 @@ class ZenGroups {
         const group = tab.group;
         if (!group) continue;
 
-        await this.#animateTabCollapse(tab).then(() => {
-          if (!this._hasActiveTabs(group) && group.hasAttribute("has-active")) {
-            group.collapsed = true;
-            group.removeAttribute("has-active");
-          }
-        });
+        if (!this._hasActiveTabs(group) && group.hasAttribute("has-active")) {
+          group.collapsed = true;
+          group.removeAttribute("has-active");
+        }
+        // await this.#animateTabCollapse(tab).then(() => {});
       }
     };
   }
@@ -384,7 +378,6 @@ class ZenGroups {
     }
 
     group.iconState = group.collapsed ? "close" : "open";
-    console.log("Icon init state: " + group.iconState);
     this.#animateTabGroupIcon(group, group.iconState, false);
   }
 
@@ -586,9 +579,9 @@ class ZenGroups {
       group.collapsed = false;
     }
 
-    await this.#animateTabExpand(event.target).then(() => {
-      this._updateTabs(group);
-    });
+    // await this.#animateTabExpand(event.target).then(() => {
+    // });
+    this._updateTabs(group);
   }
 
   #onTabGroupCreate(event) {
@@ -634,76 +627,76 @@ class ZenGroups {
     const group = event.target;
   }
 
-  async #animateGroupExpand(group) {
-    const tabHeight = 36;
-    let animations = [];
-    const tabsAnimate = group.tabs.filter((tab) => tab.hasAttribute("pending"));
+  // async #animateGroupExpand(group) {
+  //   const tabHeight = 36;
+  //   let animations = [];
+  //   const tabsAnimate = group.tabs.filter((tab) => tab.hasAttribute("pending"));
+  //
+  //   tabsAnimate.forEach((tab) => {
+  //     tab.style.marginTop = `-${tabHeight}px`;
+  //     tab.style.zIndex = -1;
+  //     tab.style.visibility = "";
+  //   });
+  //
+  //   animations = tabsAnimate.map((tab) => {
+  //     return gZenUIManager.motion.animate(
+  //       tab,
+  //       { marginTop: "0px", zIndex: 0 },
+  //       { duration: 0.15, ease: "linear" },
+  //     );
+  //   });
+  //
+  //   await Promise.all(animations);
+  // }
 
-    tabsAnimate.forEach((tab) => {
-      tab.style.marginTop = `-${tabHeight}px`;
-      tab.style.zIndex = -1;
-      tab.style.visibility = "";
-    });
+  // async #animateGroupCollapse(group) {
+  //   const tabHeight = 36;
+  //   let animations = [];
+  //   const tabsAnimate = group.tabs.filter((tab) => tab.hasAttribute("pending"));
+  //
+  //   animations = tabsAnimate.map((tab) => {
+  //     return gZenUIManager.motion
+  //       .animate(
+  //         tab,
+  //         { marginTop: `-${tabHeight}px`, zIndex: -1 },
+  //         { duration: 0.15, ease: "linear" },
+  //       )
+  //       .then(() => {
+  //         tab.style.visibility = "collapse";
+  //       });
+  //   });
+  //
+  //   await Promise.all(animations);
+  // }
 
-    animations = tabsAnimate.map((tab) => {
-      return gZenUIManager.motion.animate(
-        tab,
-        { marginTop: "0px", zIndex: 0 },
-        { duration: 0.15, ease: "linear" },
-      );
-    });
+  // async #animateTabExpand(tab) {
+  //   const tabHeight = 36;
+  //
+  //   tab.style.marginTop = `-${tabHeight}px`;
+  //   tab.style.zIndex = -1;
+  //   tab.style.visibility = "visible";
+  //
+  //   await gZenUIManager.motion.animate(
+  //     tab,
+  //     { marginTop: "0px", zIndex: 0 },
+  //     { duration: 0.15, ease: "linear" },
+  //   );
+  // }
 
-    await Promise.all(animations);
-  }
-
-  async #animateGroupCollapse(group) {
-    const tabHeight = 36;
-    let animations = [];
-    const tabsAnimate = group.tabs.filter((tab) => tab.hasAttribute("pending"));
-
-    animations = tabsAnimate.map((tab) => {
-      return gZenUIManager.motion
-        .animate(
-          tab,
-          { marginTop: `-${tabHeight}px`, zIndex: -1 },
-          { duration: 0.15, ease: "linear" },
-        )
-        .then(() => {
-          tab.style.visibility = "collapse";
-        });
-    });
-
-    await Promise.all(animations);
-  }
-
-  async #animateTabExpand(tab) {
-    const tabHeight = 36;
-
-    tab.style.marginTop = `-${tabHeight}px`;
-    tab.style.zIndex = -1;
-    tab.style.visibility = "visible";
-
-    await gZenUIManager.motion.animate(
-      tab,
-      { marginTop: "0px", zIndex: 0 },
-      { duration: 0.15, ease: "linear" },
-    );
-  }
-
-  async #animateTabCollapse(tab) {
-    const tabHeight = 36;
-    await gZenUIManager.motion
-      .animate(
-        tab,
-        { marginTop: `-${tabHeight}px`, zIndex: -1 },
-        { duration: 0.15, ease: "linear" },
-      )
-      .then(() => {
-        tab.style.visibility = "collapse";
-        tab.style.zIndex ="";
-        tab.style.marginTop = "";
-      });
-  }
+  // async #animateTabCollapse(tab) {
+  //   const tabHeight = 36;
+  //   await gZenUIManager.motion
+  //     .animate(
+  //       tab,
+  //       { marginTop: `-${tabHeight}px`, zIndex: -1 },
+  //       { duration: 0.15, ease: "linear" },
+  //     )
+  //     .then(() => {
+  //       tab.style.visibility = "collapse";
+  //       tab.style.zIndex ="";
+  //       tab.style.marginTop = "";
+  //     });
+  // }
 
   async #onLabelContainerClick(event) {
     if (event.button !== 0) return;
@@ -719,12 +712,12 @@ class ZenGroups {
 
     if (group.hasAttribute("has-active")) {
       await Promise.all([
-        this.#animateGroupCollapse(group),
+        // this.#animateGroupCollapse(group),
         this.#animateTabGroupIcon(group, "close"),
       ]);
     } else {
       await Promise.all([
-        this.#animateGroupExpand(group),
+        // this.#animateGroupExpand(group),
         this.#animateTabGroupIcon(group, "open"),
       ]);
     }
