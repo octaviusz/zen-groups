@@ -9,7 +9,7 @@
   "js": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/groups.uc.js",
   "preferences": "https://raw.githubusercontent.com/octaviusz/zen-groups/refs/heads/main/preferences.json",
   "author": "octaviusz",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "tags": [
     "sine",
     "fx-autoconfig",
@@ -17,6 +17,6 @@
     "Zen Groups"
   ],
   "createdAt": "2025-06-15",
-  "updatedAt": "2025-06-21",
+  "updatedAt": "2025-07-03",
   "fork": ["zen"]
 }

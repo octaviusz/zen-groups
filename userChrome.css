@@ -1,9 +1,10 @@
 @media not (-moz-pref("mod.zen-groups.css")) {
 	* {
-		--zen-workspace-color-bg: light-dark(color-mix(in srgb, var(--zen-primary-color) 50%, white 50%), color-mix(in srgb, var(--zen-primary-color) 50%, black 50%)) !important;
-		--zen-workspace-color-fg: light-dark(color-mix(in srgb, var(--zen-primary-color) 20%, white 80%), color-mix(in srgb, var(--zen-primary-color) 80%, black 20%)) !important;
-		--zen-workspace-color-stroke: light-dark(color-mix(in srgb, var(--zen-primary-color) 40%, black 60%), color-mix(in srgb, var(--zen-primary-color) 40%, white 60%)) !important;
+		--zen-workspace-color-bg: var(--zen-primary-color);
+		--zen-workspace-color-fg: var(--zen-colors-primary-foreground);
+		--zen-workspace-color-stroke: var(--toolbox-textcolor);
 	}
+
 
 	#tabbrowser-tabs[movingtab] tab-group:not([split-view-group]) {
 		overflow: visible;
@@ -37,36 +38,29 @@
 		border: none !important;
 		background: transparent !important;
 		height: 36px !important;
-		padding: 0 0 2px 0 !important;
+		padding: 0 0 12px 0 !important;
 		box-sizing: border-box !important;
 	}
+
 
 	tab-group:not([split-view-group]) {
 		display: flex !important;
 		flex-direction: column !important;
-		margin: 2px 2px 0px 2px !important;
+		margin: 2px !important;
 		border-radius: calc(var(--zen-border-radius) + 2px) !important;
-
-		&:not([collapsed]) .tab-group-label-container {
-			background: var(--tab-selected-bgcolor) !important;
-			box-shadow: var(--tab-selected-shadow);
-		}
 
 		.tab-group-icon {
 			width: 35px;
 			height: 35px;
 			transition: margin .3s ease;
 			flex-shrink: 0;
+			margin-inline-end: calc(var(--toolbarbutton-inner-padding) / 3) !important;
 		}
 
-
-		&[has-active] .tab-group-icon {
-			margin: 0px 0px 0px 0px;
+		.tab-group-icon svg {
+			backface-visibility: hidden;
 		}
 
-		&:not([has-active]) .tab-group-icon {
-			margin: 0px 4px 0px 4px;
-		}
 
 		&:hover .tab-group-action-button {
 			list-style-image: url('chrome://browser/skin/zen-icons/menu.svg');
@@ -99,12 +93,11 @@
 		}
 
 		& .tab-group-label-container {
-			position: sticky !important;
-			top: 0;
 			flex-direction: row !important;
 			--tab-group-color-pale: transparent !important;
 			--tab-group-color: transparent !important;
 			margin: 0 !important;
+			margin-bottom: 3px !important;
 			height: 36px !important;
 			border-radius: calc(var(--zen-border-radius) + 2px) !important;
 
@@ -128,19 +121,10 @@
 		& tab:not([zen-glance-tab]) {
 			margin-left: 10px !important;
 			overflow: visible;
-			opacity: 1 !important;
 
 			.tab-group-line {
 				--tab-group-color-invert: transparent !important;
 				--tab-group-color: transparent !important;
-			}
-
-			.tab-background:active {
-				backdrop-filter: blur(10px) !important;
-			}
-
-			@media not (-moz-bool-pref: "zen.view.sidebar-expanded") {
-				margin-left: 0 !important;
 			}
 		}
 
@@ -149,6 +133,7 @@
 		}
 
 		&[collapsed] {
+			margin-bottom: 2px !important;
 			overflow: visible;
 			background: none !important;
 		}
@@ -158,60 +143,36 @@
 		}
 	}
 
-
-	/* Popup for Zen Groups Tabs List */
-	#zen-group-tabs-popup {
+	/* Tabs popup */
+	#tab-group-tabs-popup {
 		--arrowpanel-padding: 0;
-		background-color: var(--toolbar-bgcolor);
-		border-radius: var(--arrowpanel-border-radius);
-		--arrowpanel-border-color: var(--chrome-content-separator-color);
 		width: 250px;
+		height: 280px;
 	}
 
-	#zen-group-tabs-popup #zen-group-tabs-search {
-		background-color: var(--toolbox-field-background-color) !important;
-		border: 1px solid var(--toolbox-field-border-color) !important;
-		border-radius: var(--toolbox-field-border-radius, 4px) !important;
-		color: var(--toolbox-field-color) !important;
-		margin: 0 !important;
-		padding: 5px 8px !important;
+	#tab-group-tabs-popup .tabs-list-header {
+		display: flex;
+		flex-direction: row;
+		background: var(--zen-primary-color);
+		padding: 6px;
+		border-bottom: 1px solid var(--arrowpanel-border-color);
+		margin-bottom: 4px;
+	}
+
+	#tab-group-tabs-popup #zen-group-tabs-list-search {
+		background-color: var(--zen-primary-color) !important;
+		border: none !important;
+		outline: none !important;
+		color: light-dark(white, black) !important;
 		font-size: 1em;
 	}
 
-	#zen-group-tabs-popup #zen-group-tabs-search:focus-within {
-		border-color: gray !important;
-	}
 
-	#zen-group-tabs-popup .tabs-list-scrollbox {
-		padding: 4px;
-		overflow: scroll;
-		max-height: 450px;
-	}
-
-	.tabs-list-item {
-		position: relative;
-		height: 46px;
-		margin: 2px;
-		border-radius: var(--border-radius-medium);
-		margin-inline: var(--tab-block-margin);
-		cursor: default;
-	}
-
-	.tabs-list-item-background {
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-	}
-
-	.tabs-list-item-content {
-		position: relative;
-		display: flex;
-		align-items: center;
-		direction: ltr;
-		mask-image: linear-gradient(to left, transparent, black var(--tab-label-mask-size));
-		height: 46px;
-		width: 218px;
-		margin-inline: var(--tab-block-margin);
+	#tab-group-tabs-popup .tabs-list-icon {
+		width: 16px;
+		height: 16px;
+		margin: 10px 2px 10px 10px;
+		color: light-dark(white, black);
 	}
 
 	.tabs-list-item:hover .tabs-list-item-background {
@@ -222,16 +183,15 @@
 	.tabs-list-item[selected="true"] .tabs-list-item-background {
 		background-color: rgba(255, 255, 255, 0.12);
 		box-shadow: var(--tab-selected-shadow);
-		outline-color: var(--tab-selected-outline-color);
 		border-color: transparent;
 	}
 
 	.tabs-list-item-icon {
 		width: 16px;
 		height: 16px;
-		margin-left: 6px;
-		margin-right: 6px;
 		flex-shrink: 0;
+		margin-inline-end: 10px;
+		margin-inline-start: 4px;
 	}
 
 
@@ -241,26 +201,59 @@
 		justify-content: center;
 		flex: 1;
 		min-width: 0;
+		color: var(--toolbox-textcolor);
 	}
-
 
 	.tabs-list-item-label,
 	.tab-list-item-secondary-label {
-		max-width: 200px;
-		margin-left: 4px;
+		position: relative;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		width: 250px;
+		color: light-dark(black, white);
 	}
 
-	.tabs-list-item-label {
-		color: var(--lwt-text-color);
-	}
 
 	.tab-list-item-secondary-label {
-		color: var(--lwt-text-color);
-		opacity: 0.9;
+		color: light-dark(black, white);
+		opacity: 0.6;
 		font-size: 0.8em;
 	}
 
+
+	#tab-group-tabs-popup .tabs-list-scrollbox {
+		overflow: scroll;
+	}
+
+	.tabs-list-item {
+		position: relative;
+		border-radius: var(--zen-border-radius);
+		cursor: default;
+		margin: 2px;
+	}
+
+	.tabs-list-item-background {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		margin-inline: var(--tab-block-margin);
+	}
+
+	.tabs-list-item-content {
+		position: relative;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		direction: ltr;
+		padding: 0 var(--tab-inline-padding);
+	}
+
+	#tab-group-tabs-popup * {
+		max-width: -moz-available;
+	}
+
+	tab-group .tab-group-container tab-group {
+		padding-left: 10px !important;
+	}
 }
