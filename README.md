@@ -1,3 +1,6 @@
+# Archived
+[link](https://github.com/zen-browser/desktop/commit/591dce5921311aeb34b3496409aadcca25072fd9)
+
 # 📁 Zen Groups
 > ⚠️ Note: This is an early version and may contain a bunch of bugs.
 This mod is an extension of the Firefox Groups functionality. Also if you are already using some css for groups please disable it.
